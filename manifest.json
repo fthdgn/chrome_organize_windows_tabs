@@ -1,0 +1,27 @@
+{
+   "background": {
+      "persistent": false,
+      "scripts": [
+         "background.js"
+      ]
+   },
+   "browser_action": {
+      "default_icon": "icons/48.png",
+      "default_title": "Organize Windows and Tabs"
+   },
+   "homepage_url": "https://github.com/fthdgn/chrome_organize_windows_tabs/",
+   "description": "Organize Windows and Tabs",
+   "icons": {
+      "128": "icons/128.png",
+      "48": "icons/48.png",
+      "16": "icons/16.png"
+   },
+   "manifest_version": 2,
+   "name": "Organize Windows and Tabs",
+   "offline_enabled": true,
+   "permissions": [
+      "tabs",
+      "contextMenus"
+   ],
+   "version": "1.0.0"
+}
