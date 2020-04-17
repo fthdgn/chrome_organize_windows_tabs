@@ -19,7 +19,12 @@ const CLOSE_TABS_FROM_THIS_DOMAIN_ACTION = {
   id: "close_tabs_from_this_domain"
 }
 
-const ALL_ACTIONS = [MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION]
+const MOVE_TABS_FROM_THIS_DOMAIN_ACTION = {
+  title: "Move tabs from this domain to this window",
+  id: "move_tabs_from_this_domain"
+}
+
+const ALL_ACTIONS = [MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION, MOVE_TABS_FROM_THIS_DOMAIN_ACTION]
 
 function getSelectedTab() {
   return new Promise(function (resolve, reject) {
@@ -88,6 +93,8 @@ function baseAction(actionId) {
     sortTabsAction()
   } else if (actionId == CLOSE_TABS_FROM_THIS_DOMAIN_ACTION.id) {
     closeTabsFromCurrentDomainAction()
+  } else if (actionId == MOVE_TABS_FROM_THIS_DOMAIN_ACTION.id) {
+    moveTabsFromCurrentDomainAction()
   }
 }
 
@@ -111,6 +118,20 @@ async function closeTabsFromCurrentDomainAction() {
   tabs = tabs.filter(tab => { return new URL(tab.url).host == domain })
   tabs.forEach(tab => {
     chrome.tabs.remove(tab.id)
+  })
+}
+
+async function moveTabsFromCurrentDomainAction() {
+  let currentWindow = await getCurrentWindow()
+  let selectedTab = await getSelectedTab()
+  let domain = new URL(selectedTab.url).host
+  let tabs = await getAllTabs()
+  tabs = tabs.filter(tab => { return new URL(tab.url).host == domain })
+  tabs.forEach(tab => {
+    chrome.tabs.move(tab.id, { "windowId": currentWindow.id, "index": currentWindow.tabs.length + tabs.length })
+    if (tab.pinned == true) {
+      chrome.tabs.update(tab.id, { "pinned": true })
+    }
   })
 }
 

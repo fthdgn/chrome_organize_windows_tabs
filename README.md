@@ -9,6 +9,8 @@ This extension adds these actions:
   Sort tabs on target windows according to tab url alphabetically.
 * Close tabs from this domain:    
   Closes all tabs with same domain.
+* Move tabs from this domain to this window    
+  Moves tabs from same domain with the selected tab's domain to current window.
 
 Default extension icon action is "Merge windows and sort tabs". This can be changed from options page.
 
