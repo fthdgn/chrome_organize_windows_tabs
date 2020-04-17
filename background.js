@@ -50,11 +50,35 @@ function getIsPinnedTabsIgnored() {
   })
 }
 
+function getSnapshotTabs() {
+  return new Promise(function (resolve, reject) {
+    chrome.storage.sync.get({ tabsSnapshot: [] }, storage => {
+      resolve(storage.tabsSnapshot)
+    })
+  })
+}
+
 function getAllWindows() {
   return new Promise(function (resolve, reject) {
     chrome.windows.getAll({ "populate": true }, function (windows) {
       resolve(windows)
     })
+  })
+}
+
+async function snapshotTabs() {
+  let tabs = (await getAllTabs()).map(tab => { return { id: tab.id, windowId: tab.windowId, index: tab.index, pinned: tab.pinned } })
+  chrome.storage.sync.set({ tabsSnapshot: tabs })
+}
+
+async function restoreTabs() {
+  let tabs = await getSnapshotTabs()
+  var windowsIdMaps = {}
+  tabs.forEach(tab => {
+    chrome.tabs.move(tab.id, { "windowId": tab.windowId, "index": tab.index })
+    if (tab.pinned == true) {
+      chrome.tabs.update(tab.id, { "pinned": true })
+    }
   })
 }
 
@@ -84,7 +108,12 @@ async function getCurrentWindowTabs() {
   return getTabsOfWindow(currentWindow, isPinnedTabsIgnored)
 }
 
-function baseAction(actionId) {
+async function baseAction(actionId) {
+  if (actionId == "undo") {
+    await restoreTabs()
+    return
+  }
+  await snapshotTabs()
   if (actionId == MERGE_AND_SORT_ACTION.id) {
     mergeWindowsAndSortTabsAction()
   } else if (actionId == MERGE_ACTION.id) {
@@ -185,3 +214,9 @@ ALL_ACTIONS.forEach(item => {
     contexts: ["browser_action"],
   });
 })
+
+chrome.contextMenus.create({
+  "title": "Undo",
+  "id": "undo",
+  contexts: ["browser_action"],
+});
