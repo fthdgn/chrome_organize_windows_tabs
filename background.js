@@ -59,6 +59,9 @@ function getAllWindows() {
 }
 
 function getTabsOfWindow(window, isPinnedTabsIgnored) {
+  if (window.type == "popup") {
+    return []
+  }
   return window.tabs.filter(tab => { return !isPinnedTabsIgnored || !tab.pinned })
 }
 
