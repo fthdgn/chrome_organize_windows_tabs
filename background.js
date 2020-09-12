@@ -121,7 +121,13 @@ async function closeTabsFromCurrentDomainAction() {
   let selectedTab = await getSelectedTab()
   let domain = new URL(selectedTab.url).host
   let tabs = await getAllTabs()
-  tabs = tabs.filter(tab => { return new URL(tab.url).host == domain })
+  tabs = tabs.filter(tab => {
+    try {
+      return new URL(tab.url).host == domain
+    } catch (error) {
+      return false
+    }
+  })
   tabs.forEach(tab => {
     chrome.tabs.remove(tab.id)
   })
@@ -132,7 +138,13 @@ async function moveTabsFromCurrentDomainAction() {
   let selectedTab = await getSelectedTab()
   let domain = new URL(selectedTab.url).host
   let tabs = await getAllTabs()
-  tabs = tabs.filter(tab => { return new URL(tab.url).host == domain })
+  tabs = tabs.filter(tab => {
+    try {
+      return new URL(tab.url).host == domain
+    } catch (error) {
+      return false
+    }
+  })
   tabs.forEach(tab => {
     chrome.tabs.move(tab.id, { "windowId": currentWindow.id, "index": currentWindow.tabs.length + tabs.length })
     if (tab.pinned == true) {
