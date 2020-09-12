@@ -42,10 +42,13 @@ function getCurrentWindow() {
   })
 }
 
-function getIsPinnedTabsIgnored() {
+function getOptions() {
   return new Promise(function (resolve, reject) {
-    chrome.storage.sync.get({ ignorePinnedTabs: true }, storage => {
-      resolve(storage.ignorePinnedTabs)
+    chrome.storage.sync.get({
+      ignorePinnedTabs: true,
+      ignorePopupWindows: true,
+    }, storage => {
+      resolve(storage)
     })
   })
 }
@@ -58,17 +61,17 @@ function getAllWindows() {
   })
 }
 
-function getTabsOfWindow(window, isPinnedTabsIgnored) {
-  if (window.type == "popup") {
+function getTabsOfWindow(window, options) {
+  if (options.ignorePopupWindows && window.type == "popup") {
     return []
   }
-  return window.tabs.filter(tab => { return !isPinnedTabsIgnored || !tab.pinned })
+  return window.tabs.filter(tab => { return !options.ignorePinnedTabs || !tab.pinned })
 }
 
-function getTabsOfWindows(windows, isPinnedTabsIgnored) {
+function getTabsOfWindows(windows, options) {
   let tabs = []
   windows.forEach(window => {
-    getTabsOfWindow(window, isPinnedTabsIgnored).forEach(tab => {
+    getTabsOfWindow(window, options).forEach(tab => {
       tabs.push(tab)
     })
   })
@@ -76,15 +79,15 @@ function getTabsOfWindows(windows, isPinnedTabsIgnored) {
 }
 
 async function getAllTabs() {
-  let isPinnedTabsIgnored = await getIsPinnedTabsIgnored()
+  let options = await getOptions()
   let windows = await getAllWindows()
-  return getTabsOfWindows(windows, isPinnedTabsIgnored)
+  return await getTabsOfWindows(windows, options)
 }
 
 async function getCurrentWindowTabs() {
-  let isPinnedTabsIgnored = await getIsPinnedTabsIgnored()
+  let options = await getOptions()
   let currentWindow = await getCurrentWindow()
-  return getTabsOfWindow(currentWindow, isPinnedTabsIgnored)
+  return getTabsOfWindow(currentWindow, options)
 }
 
 function baseAction(actionId) {
@@ -101,16 +104,16 @@ function baseAction(actionId) {
   }
 }
 
-async function mergeWindowsAndSortTabsAction(ignorePinnedTabs) {
+async function mergeWindowsAndSortTabsAction() {
   await mergeWindows()
   await sortTabs()
 }
 
-async function mergeWindowsAction(ignorePinnedTabs) {
+async function mergeWindowsAction() {
   await mergeWindows()
 }
 
-async function sortTabsAction(ignorePinnedTabs) {
+async function sortTabsAction() {
   await sortTabs()
 }
 
