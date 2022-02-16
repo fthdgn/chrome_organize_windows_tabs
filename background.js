@@ -37,6 +37,7 @@ async function getOptions() {
     ignorePinnedTabs: true,
     ignorePopupWindows: true,
     ignoreAppWindows: true,
+    showDefaultActionPopup: true,
   })
 }
 
@@ -202,5 +203,9 @@ chrome.runtime.onInstalled.addListener(() => {
       "id": item.id,
       contexts: ["action"],
     });
+  })
+
+  getOptions().then(options => {
+    chrome.action.setPopup({ popup: options.showDefaultActionPopup ? "popup.html" : "" })
   })
 })

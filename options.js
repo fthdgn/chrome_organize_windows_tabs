@@ -2,6 +2,7 @@ const defaultActionInput = document.getElementById("defaultActionInput")
 const ignorePinnedTabsInput = document.getElementById("ignorePinnedTabsInput")
 const ignorePopupWindowsInput = document.getElementById("ignorePopupWindowsInput")
 const ignoreAppWindowsInput = document.getElementById("ignoreAppWindowsInput")
+const showDefaultActionPopupInput = document.getElementById("showDefaultActionPopupInput")
 
 ALL_ACTIONS.forEach(action => {
     var opt = document.createElement("option");
@@ -15,6 +16,7 @@ getOptions().then(options => {
     ignorePinnedTabsInput.checked = options.ignorePinnedTabs
     ignorePopupWindowsInput.checked = options.ignorePopupWindows
     ignoreAppWindowsInput.checked = options.ignoreAppWindows
+    showDefaultActionPopupInput.checked = options.showDefaultActionPopup
 })
 
 defaultActionInput.addEventListener('change', () => {
@@ -31,4 +33,9 @@ ignorePopupWindowsInput.addEventListener('change', () => {
 
 ignoreAppWindowsInput.addEventListener('change', () => {
     chrome.storage.sync.set({ ignoreAppWindows: ignoreAppWindowsInput.checked })
+});
+
+showDefaultActionPopupInput.addEventListener('change', () => {
+    chrome.storage.sync.set({ showDefaultActionPopup: showDefaultActionPopupInput.checked })
+    chrome.action.setPopup({ popup: showDefaultActionPopupInput.checked ? "popup.html" : "" })
 });
