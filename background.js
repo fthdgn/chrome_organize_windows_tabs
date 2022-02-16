@@ -24,7 +24,12 @@ const MOVE_TABS_FROM_THIS_DOMAIN_ACTION = {
   id: "move_tabs_from_this_domain"
 }
 
-const ALL_ACTIONS = [MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION, MOVE_TABS_FROM_THIS_DOMAIN_ACTION]
+const GROUP_TABS_FROM_THIS_DOMAON_ACTION = {
+  title: "Group tabs from this domain",
+  id: "group_tabs_from_this_domain"
+}
+
+const ALL_ACTIONS = [MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION, MOVE_TABS_FROM_THIS_DOMAIN_ACTION, GROUP_TABS_FROM_THIS_DOMAON_ACTION]
 
 async function getOptions() {
   return await chrome.storage.sync.get({
@@ -33,6 +38,16 @@ async function getOptions() {
     ignorePopupWindows: true,
     ignoreAppWindows: true,
   })
+}
+
+async function getTabsFromDomain(url) {
+  let options = await getOptions()
+  let tabs = await chrome.tabs.query({
+    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE,
+    url: url.protocol + "//" + url.host + "/*",
+    pinned: options.ignorePinnedTabs ? false : undefined,
+  })
+  return tabs
 }
 
 function baseAction(actionId) {
@@ -46,6 +61,8 @@ function baseAction(actionId) {
     closeTabsFromCurrentDomainAction()
   } else if (actionId == MOVE_TABS_FROM_THIS_DOMAIN_ACTION.id) {
     moveTabsFromCurrentDomainAction()
+  } else if (actionId == GROUP_TABS_FROM_THIS_DOMAON_ACTION.id) {
+    groupTabsFromCurrentDomainAction()
   }
 }
 
@@ -63,35 +80,38 @@ async function sortTabsAction() {
 }
 
 async function closeTabsFromCurrentDomainAction() {
-  let options = await getOptions()
   let selectedTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
   let url = new URL(selectedTab.url)
-  let tabs = await chrome.tabs.query({
-    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE,
-    url: url.protocol + "//" + url.host + "/*",
-    pinned: options.ignorePinnedTabs ? false : undefined,
-  })
-
+  let tabs = await getTabsFromDomain(url)
   for (let tab of tabs) {
     await chrome.tabs.remove(tab.id)
   }
 }
 
 async function moveTabsFromCurrentDomainAction() {
-  let options = await getOptions()
   let selectedTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
   let url = new URL(selectedTab.url)
-  let tabs = await chrome.tabs.query({
-    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE,
-    url: url.protocol + "//" + url.host + "/*",
-    pinned: options.ignorePinnedTabs ? false : undefined,
-  })
-  console.log(tabs)
+  let tabs = await getTabsFromDomain(url)
   for (let tab of tabs) {
     await chrome.tabs.move(tab.id, { windowId: selectedTab.windowId, index: -1 })
     if (tab.pinned == true) {
       await chrome.tabs.update(tab.id, { pinned: true })
     }
+  }
+}
+
+async function groupTabsFromCurrentDomainAction() {
+  let selectedTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
+  let url = new URL(selectedTab.url)
+  let tabs = await getTabsFromDomain(url)
+  let tabIds = tabs.map(tab => tab.id)
+  let existingGroups = await chrome.tabGroups.query({ title: url.host })
+  if (existingGroups.length > 0) {
+    let existingGroupId = existingGroups[0].id
+    await chrome.tabs.group({ groupId: existingGroupId, tabIds: tabIds })
+  } else {
+    let groupId = await chrome.tabs.group({ tabIds: tabIds })
+    await chrome.tabGroups.update(groupId, { title: url.host })
   }
 }
 
