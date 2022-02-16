@@ -26,40 +26,25 @@ const MOVE_TABS_FROM_THIS_DOMAIN_ACTION = {
 
 const ALL_ACTIONS = [MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION, MOVE_TABS_FROM_THIS_DOMAIN_ACTION]
 
-function getSelectedTab() {
-  return new Promise(function (resolve, reject) {
-    chrome.tabs.getSelected(tab => {
-      resolve(tab)
-    })
+async function getSelectedTab() {
+  return (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
+}
+
+async function getCurrentWindow() {
+  return await chrome.windows.getCurrent({ "populate": true })
+}
+
+async function getOptions() {
+  return await chrome.storage.sync.get({
+    defaultAction: MERGE_AND_SORT_ACTION.id,
+    ignorePinnedTabs: true,
+    ignorePopupWindows: true,
+    ignoreAppWindows: true,
   })
 }
 
-function getCurrentWindow() {
-  return new Promise(function (resolve, reject) {
-    chrome.windows.getCurrent({ "populate": true }, function (currentWindow) {
-      resolve(currentWindow)
-    })
-  })
-}
-
-function getOptions() {
-  return new Promise(function (resolve, reject) {
-    chrome.storage.sync.get({
-      ignorePinnedTabs: true,
-      ignorePopupWindows: true,
-      ignoreAppWindows: true,
-    }, storage => {
-      resolve(storage)
-    })
-  })
-}
-
-function getAllWindows() {
-  return new Promise(function (resolve, reject) {
-    chrome.windows.getAll({ "populate": true }, function (windows) {
-      resolve(windows)
-    })
-  })
+async function getAllWindows() {
+  return await chrome.windows.getAll({ "populate": true })
 }
 
 function getTabsOfWindow(window, options) {
@@ -85,7 +70,7 @@ function getTabsOfWindows(windows, options) {
 async function getAllTabs() {
   let options = await getOptions()
   let windows = await getAllWindows()
-  return await getTabsOfWindows(windows, options)
+  return getTabsOfWindows(windows, options)
 }
 
 async function getCurrentWindowTabs() {
@@ -194,16 +179,17 @@ chrome.contextMenus.onClicked.addListener(event => {
   baseAction(event.menuItemId)
 });
 
-chrome.browserAction.onClicked.addListener(event => {
-  chrome.storage.sync.get({ defaultAction: MERGE_AND_SORT_ACTION.id }, result => {
-    baseAction(result.defaultAction)
-  })
+chrome.action.onClicked.addListener(async event => {
+  let options = await getOptions()
+  baseAction(options.defaultAction)
 })
 
-ALL_ACTIONS.forEach(item => {
-  chrome.contextMenus.create({
-    "title": item.title,
-    "id": item.id,
-    contexts: ["browser_action"],
-  });
+chrome.runtime.onInstalled.addListener(() => {
+  ALL_ACTIONS.forEach(item => {
+    chrome.contextMenus.create({
+      "title": item.title,
+      "id": item.id,
+      contexts: ["action"],
+    });
+  })
 })
