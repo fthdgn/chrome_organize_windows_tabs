@@ -26,14 +26,6 @@ const MOVE_TABS_FROM_THIS_DOMAIN_ACTION = {
 
 const ALL_ACTIONS = [MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION, MOVE_TABS_FROM_THIS_DOMAIN_ACTION]
 
-async function getSelectedTab() {
-  return (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
-}
-
-async function getCurrentWindow() {
-  return await chrome.windows.getCurrent({ "populate": true })
-}
-
 async function getOptions() {
   return await chrome.storage.sync.get({
     defaultAction: MERGE_AND_SORT_ACTION.id,
@@ -41,42 +33,6 @@ async function getOptions() {
     ignorePopupWindows: true,
     ignoreAppWindows: true,
   })
-}
-
-async function getAllWindows() {
-  return await chrome.windows.getAll({ "populate": true })
-}
-
-function getTabsOfWindow(window, options) {
-  if (options.ignorePopupWindows && window.type == "popup") {
-    return []
-  }
-  if (options.ignoreAppWindows && window.type == "app") {
-    return []
-  }
-  return window.tabs.filter(tab => { return !options.ignorePinnedTabs || !tab.pinned })
-}
-
-function getTabsOfWindows(windows, options) {
-  let tabs = []
-  windows.forEach(window => {
-    getTabsOfWindow(window, options).forEach(tab => {
-      tabs.push(tab)
-    })
-  })
-  return tabs
-}
-
-async function getAllTabs() {
-  let options = await getOptions()
-  let windows = await getAllWindows()
-  return getTabsOfWindows(windows, options)
-}
-
-async function getCurrentWindowTabs() {
-  let options = await getOptions()
-  let currentWindow = await getCurrentWindow()
-  return getTabsOfWindow(currentWindow, options)
 }
 
 function baseAction(actionId) {
@@ -107,72 +63,107 @@ async function sortTabsAction() {
 }
 
 async function closeTabsFromCurrentDomainAction() {
-  let selectedTab = await getSelectedTab()
-  let domain = new URL(selectedTab.url).host
-  let tabs = await getAllTabs()
-  tabs = tabs.filter(tab => {
-    try {
-      return new URL(tab.url).host == domain
-    } catch (error) {
-      return false
-    }
+  let options = await getOptions()
+  let selectedTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
+  let url = new URL(selectedTab.url)
+  let tabs = await chrome.tabs.query({
+    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE,
+    url: url.protocol + "//" + url.host + "/*",
+    pinned: options.ignorePinnedTabs ? false : undefined,
   })
-  tabs.forEach(tab => {
-    chrome.tabs.remove(tab.id)
-  })
+
+  for (let tab of tabs) {
+    await chrome.tabs.remove(tab.id)
+  }
 }
 
 async function moveTabsFromCurrentDomainAction() {
-  let currentWindow = await getCurrentWindow()
-  let selectedTab = await getSelectedTab()
-  let domain = new URL(selectedTab.url).host
-  let tabs = await getAllTabs()
-  tabs = tabs.filter(tab => {
-    try {
-      return new URL(tab.url).host == domain
-    } catch (error) {
-      return false
-    }
+  let options = await getOptions()
+  let selectedTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
+  let url = new URL(selectedTab.url)
+  let tabs = await chrome.tabs.query({
+    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE,
+    url: url.protocol + "//" + url.host + "/*",
+    pinned: options.ignorePinnedTabs ? false : undefined,
   })
-  tabs.forEach(tab => {
-    chrome.tabs.move(tab.id, { "windowId": currentWindow.id, "index": currentWindow.tabs.length + tabs.length })
+  console.log(tabs)
+  for (let tab of tabs) {
+    await chrome.tabs.move(tab.id, { windowId: selectedTab.windowId, index: -1 })
     if (tab.pinned == true) {
-      chrome.tabs.update(tab.id, { "pinned": true })
+      await chrome.tabs.update(tab.id, { pinned: true })
     }
-  })
+  }
 }
 
 async function mergeWindows() {
-  let currentWindow = await getCurrentWindow()
-  let tabs = await getAllTabs()
+  let options = await getOptions()
+  let currentWindow = await chrome.windows.getCurrent()
+  let windows = await chrome.windows.getAll({ populate: true })
 
-  tabs.forEach(tab => {
-    chrome.tabs.move(tab.id, { "windowId": currentWindow.id, "index": tabs.length * 2 })
-    if (tab.pinned == true) {
-      chrome.tabs.update(tab.id, { "pinned": true })
+  for (let window of windows) {
+    if (window.id === currentWindow.id) {
+      continue;
     }
-  })
+    if (options.ignoreAppWindows && window.type === "app") {
+      continue;
+    }
+    if (options.ignorePopupWindows && window.type === "popup") {
+      continue;
+    }
+
+    for (let tab of window.tabs) {
+      if (options.ignorePinnedTabs && tab.pinned) {
+        continue
+      }
+
+      if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+        await chrome.tabGroups.move(tab.groupId, { windowId: currentWindow.id, index: -1 })
+      } else {
+        await chrome.tabs.move(tab.id, { windowId: currentWindow.id, index: -1 })
+      }
+
+      if (tab.pinned == true) {
+        await chrome.tabs.update(tab.id, { pinned: true })
+      }
+    }
+  }
 }
 
 async function sortTabs() {
-  let currentWindow = await getCurrentWindow()
-  let tabs = await getCurrentWindowTabs()
+  let options = await getOptions()
+  let currentWindow = await chrome.windows.getCurrent({ populate: true })
+  let tabs = currentWindow.tabs
+  if (options.ignorePinnedTabs) {
+    tabs = tabs.filter(tab => !tab.pinned)
+  }
+
   tabs.sort(function (a, b) {
-    if (a.url < b.url) {
+    if (a.groupId < b.groupId) {
       return -1
-    } else if (a.url > b.url) {
+    } else if (a.groupId > b.groupId) {
       return 1
     } else {
-      return 0
+      if (a.url < b.url) {
+        return -1
+      } else if (a.url > b.url) {
+        return 1
+      } else {
+        return 0
+      }
     }
   })
-  tabs.forEach(tab => {
-    chrome.tabs.move(tab.id,
-      { "windowId": currentWindow.id, "index": tabs.length * 2 })
+
+  for (let tab of tabs) {
+    if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+      await chrome.tabGroups.move(tab.groupId, { windowId: currentWindow.id, index: -1 })
+    } else {
+      await chrome.tabs.move(tab.id, { windowId: currentWindow.id, index: -1 })
+    }
+
     if (tab.pinned == true) {
-      chrome.tabs.update(tab.id, { "pinned": true })
+      await chrome.tabs.update(tab.id, { pinned: true })
     }
-  })
+  }
 }
 
 chrome.contextMenus.onClicked.addListener(event => {
