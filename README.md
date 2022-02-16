@@ -14,4 +14,4 @@ This extension adds these actions:
 
 Default extension icon action is "Merge windows and sort tabs". This can be changed from options page.
 
-By default the extension ignores pinned tabs and popup windows for merge and sort actions. These can be changed from options page.
+By default the extension ignores pinned tabs, popup and app windows for merge and sort actions. These can be changed from options page.

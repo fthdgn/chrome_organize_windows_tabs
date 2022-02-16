@@ -47,6 +47,7 @@ function getOptions() {
     chrome.storage.sync.get({
       ignorePinnedTabs: true,
       ignorePopupWindows: true,
+      ignoreAppWindows: true,
     }, storage => {
       resolve(storage)
     })
@@ -63,6 +64,9 @@ function getAllWindows() {
 
 function getTabsOfWindow(window, options) {
   if (options.ignorePopupWindows && window.type == "popup") {
+    return []
+  }
+  if (options.ignoreAppWindows && window.type == "app") {
     return []
   }
   return window.tabs.filter(tab => { return !options.ignorePinnedTabs || !tab.pinned })
