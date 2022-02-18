@@ -1,3 +1,7 @@
+const DO_NOTHING = {
+  title: "Do nothing",
+  id: "do_nothing"
+}
 
 const MERGE_AND_SORT_ACTION = {
   title: "Merge windows and sort tabs",
@@ -29,7 +33,7 @@ const GROUP_TABS_FROM_THIS_DOMAON_ACTION = {
   id: "group_tabs_from_this_domain"
 }
 
-const ALL_ACTIONS = [MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION, MOVE_TABS_FROM_THIS_DOMAIN_ACTION, GROUP_TABS_FROM_THIS_DOMAON_ACTION]
+const ALL_ACTIONS = [DO_NOTHING, MERGE_AND_SORT_ACTION, MERGE_ACTION, SORT_ACTION, CLOSE_TABS_FROM_THIS_DOMAIN_ACTION, MOVE_TABS_FROM_THIS_DOMAIN_ACTION, GROUP_TABS_FROM_THIS_DOMAON_ACTION]
 
 async function getOptions() {
   return await chrome.storage.sync.get({
@@ -52,7 +56,9 @@ async function getTabsFromDomain(url) {
 }
 
 function baseAction(actionId) {
-  if (actionId == MERGE_AND_SORT_ACTION.id) {
+  if (actionId == DO_NOTHING.id) {
+    //DO NOTHING
+  } else if (actionId == MERGE_AND_SORT_ACTION.id) {
     mergeWindowsAndSortTabsAction()
   } else if (actionId == MERGE_ACTION.id) {
     mergeWindowsAction()
@@ -197,13 +203,16 @@ chrome.action.onClicked.addListener(async event => {
 })
 
 chrome.runtime.onInstalled.addListener(() => {
-  ALL_ACTIONS.forEach(item => {
+  for (action of ALL_ACTIONS) {
+    if (action === DO_NOTHING) {
+      continue
+    }
     chrome.contextMenus.create({
-      "title": item.title,
-      "id": item.id,
+      "title": action.title,
+      "id": action.id,
       contexts: ["action"],
     });
-  })
+  }
 
   getOptions().then(options => {
     chrome.action.setPopup({ popup: options.showDefaultActionPopup ? "popup.html" : "" })
