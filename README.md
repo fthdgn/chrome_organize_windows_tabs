@@ -11,7 +11,11 @@ This extension adds these actions:
   Closes all tabs with same domain.
 * Move tabs from this domain to this window    
   Moves tabs from same domain with the selected tab's domain to current window.
+* Group tabs from this domain    
+  Groups tabs from same domain with the selected tab's domain.
 
-Default extension icon action is "Merge windows and sort tabs". This can be changed from options page.
+Default extension icon action is "Merge windows and sort tabs". This can be changed from options page. You can select "do nothing" option to disable default action.
 
 By default the extension ignores pinned tabs, popup and app windows for merge and sort actions. These can be changed from options page.
+
+This extension does not cause tab groups to be ungrouped.
