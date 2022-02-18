@@ -17,4 +17,6 @@ okButton.onclick = async () => {
     if (dontAskAgainInput.checked) {
         chrome.action.setPopup({ popup: "" })
     }
+
+    chrome.extension.getViews().find(v => v.location.pathname === "/popup.html").close()
 }
