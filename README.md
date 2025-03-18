@@ -13,6 +13,7 @@ This extension adds these actions:
   Moves tabs from same domain with the selected tab's domain to current window.
 * Group tabs from this domain    
   Groups tabs from same domain with the selected tab's domain.
+* Moves current tab to a new window
 
 Default extension icon action is "Merge windows and sort tabs". This can be changed from options page. You can select "do nothing" option to disable default action.
 
