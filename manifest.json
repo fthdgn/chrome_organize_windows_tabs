@@ -1,31 +1,56 @@
 {
-   "background": {
-      "service_worker": "background.js"
-   },
-   "action": {
-      "default_icon": {
-         "128": "icons/128.png",
-         "48": "icons/48.png",
-         "16": "icons/16.png"
-      },
-      "default_title": "Organize Windows and Tabs"
-   },
-   "homepage_url": "https://github.com/fthdgn/chrome_organize_windows_tabs/",
-   "description": "Organize Windows and Tabs",
-   "icons": {
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
       "128": "icons/128.png",
       "48": "icons/48.png",
       "16": "icons/16.png"
-   },
-   "manifest_version": 3,
-   "name": "Organize Windows and Tabs",
-   "offline_enabled": true,
-   "options_page": "options.html",
-   "permissions": [
-      "tabs",
-      "contextMenus",
-      "storage",
-      "tabGroups"
-   ],
-   "version": "1.4.1"
+    },
+    "default_title": "Organize Windows and Tabs"
+  },
+  "homepage_url": "https://github.com/fthdgn/chrome_organize_windows_tabs/",
+  "description": "Organize Windows and Tabs",
+  "icons": {
+    "128": "icons/128.png",
+    "48": "icons/48.png",
+    "16": "icons/16.png"
+  },
+  "manifest_version": 3,
+  "name": "Organize Windows and Tabs",
+  "offline_enabled": true,
+  "options_page": "options.html",
+  "permissions": ["tabs", "contextMenus", "storage", "tabGroups"],
+  "version": "1.4.1",
+  "commands": {
+    "merge-windows-and-sort-tabs": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
+      },
+      "description": "Merge all windows and sort tabs"
+    },
+    "merge-windows": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+0",
+        "mac": "Command+Shift+0"
+      },
+      "description": "Merge all windows"
+    },
+    "sort-tabs": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Sort tabs"
+    },
+    "move-tab-to-new-window": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+9",
+        "mac": "Command+Shift+9"
+      },
+      "description": "Move the current tab to a new window"
+    }
+  }
 }
