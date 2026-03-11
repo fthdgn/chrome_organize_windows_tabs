@@ -10,6 +10,37 @@ const showDefaultActionPopupInput = /** @type {HTMLInputElement} */ (
   document.getElementById("showDefaultActionPopupInput")
 )
 
+const colorCodeRadios = /** @type {NodeListOf<HTMLInputElement>} */ (
+  document.querySelectorAll('input[name="colorCode"]')
+)
+
+const colorCodeInput = /** @type {HTMLInputElement} */ (document.getElementById("colorCodeInput"))
+
+/** @type {Awaited<ReturnType<typeof theme.loadIcon>>} */
+let iconData
+
+/**
+ * @param {string} color
+ * @param {HTMLCanvasElement} canvas
+ */
+function drawPreview(color, canvas) {
+  const size = canvas.width
+  const imageData = theme.renderIcon(size, color, iconData)
+  const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"))
+  ctx.putImageData(imageData, 0, 0)
+}
+
+void theme.loadIcon().then((data) => {
+  iconData = data
+  for (const radio of colorCodeRadios) {
+    const canvas = radio.parentElement?.querySelector("canvas")
+    if (canvas && radio.value && radio.value !== "custom") {
+      drawPreview(radio.value, /** @type {HTMLCanvasElement} */ (canvas))
+    }
+  }
+  drawPreview(colorCodeInput.value, /** @type {HTMLCanvasElement} */ (document.getElementById("previewCustom")))
+})
+
 utils.localizeHtml()
 
 Object.values(actions.Action).forEach((actionId) => {
@@ -25,6 +56,20 @@ void options.get().then((opts) => {
   ignorePopupWindowsInput.checked = opts.ignorePopupWindows
   ignoreAppWindowsInput.checked = opts.ignoreAppWindows
   showDefaultActionPopupInput.checked = opts.showDefaultActionPopup
+
+  const presetValues = new Set(Array.from(colorCodeRadios, (r) => r.value))
+  if (presetValues.has(opts.colorCode)) {
+    for (const radio of colorCodeRadios) {
+      radio.checked = radio.value === opts.colorCode
+    }
+  } else {
+    const customRadio = /** @type {HTMLInputElement} */ (
+      document.querySelector('input[name="colorCode"][value="custom"]')
+    )
+    customRadio.checked = true
+    colorCodeInput.value = opts.colorCode
+    drawPreview(opts.colorCode, /** @type {HTMLCanvasElement} */ (document.getElementById("previewCustom")))
+  }
 })
 
 defaultActionInput.addEventListener("change", async () => {
@@ -56,4 +101,32 @@ showDefaultActionPopupInput.addEventListener("change", async () => {
   await chrome.action.setPopup({
     popup: showDefaultActionPopupInput.checked ? "src/popup/popup.html" : "",
   })
+})
+
+for (const radio of colorCodeRadios) {
+  radio.addEventListener("change", async () => {
+    if (radio.value === "custom") {
+      await options.set({ colorCode: colorCodeInput.value })
+    } else {
+      await options.set({ colorCode: radio.value })
+    }
+  })
+  if (radio.value === "custom") {
+    radio.parentElement?.addEventListener("click", () => {
+      colorCodeInput.click()
+    })
+  }
+}
+
+let debounceTimer = 0
+colorCodeInput.addEventListener("input", () => {
+  const customRadio = /** @type {HTMLInputElement} */ (
+    document.querySelector('input[name="colorCode"][value="custom"]')
+  )
+  customRadio.checked = true
+  drawPreview(colorCodeInput.value, /** @type {HTMLCanvasElement} */ (document.getElementById("previewCustom")))
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(async () => {
+    await options.set({ colorCode: colorCodeInput.value })
+  }, 300)
 })

@@ -4,6 +4,8 @@
   "description": "Chrome extension to organize windows and tabs",
   "main": "src/background/background.js",
   "scripts": {
+    "generate-icons": "node scripts/generate-icons.mjs",
+    "prestart": "npm run generate-icons",
     "start": "node scripts/start.mjs",
     "format": "prettier -w .",
     "check:lint": "eslint src",
@@ -12,7 +14,7 @@
     "check:type:scripts": "tsc --noEmit -p scripts",
     "check:format": "prettier -c .",
     "check": "run-p check:*",
-    "prepackage": "npm run check",
+    "prepackage": "run-p generate-icons check",
     "package": "bestzip organize_windows_tabs.zip manifest.json icons/ src/ _locales/"
   },
   "keywords": [],
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@puppeteer/browsers": "^2.13.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@types/chrome": "^0.1.37",
     "@types/node": "^25.4.0",
     "bestzip": "^2.2.1",

@@ -6,6 +6,7 @@ import globals from "globals"
 const sharedGlobals = {
   actions: "readonly",
   options: "readonly",
+  theme: "readonly",
   utils: "readonly",
 }
 

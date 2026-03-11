@@ -35,11 +35,38 @@
         <span data-i18n="options_default_action"></span>
         <select id="defaultActionInput"></select>
       </div>
+      <div class="option-row">
+        <span data-i18n="options_icon_theme"></span>
+      </div>
+      <div id="iconThemeSelector">
+        <label>
+          <input type="radio" name="colorCode" value="" />
+          <span data-i18n="options_icon_default"></span>
+          <img src="../../icons/icon.svg" width="48" height="48" />
+        </label>
+        <label>
+          <input type="radio" name="colorCode" value="#474747" />
+          <span data-i18n="options_icon_dark"></span>
+          <canvas width="48" height="48" id="previewDark"></canvas>
+        </label>
+        <label>
+          <input type="radio" name="colorCode" value="#C7C7C7" />
+          <span data-i18n="options_icon_light"></span>
+          <canvas width="48" height="48" id="previewLight"></canvas>
+        </label>
+        <label>
+          <input type="radio" name="colorCode" value="custom" />
+          <span data-i18n="options_icon_custom"></span>
+          <canvas width="48" height="48" id="previewCustom"></canvas>
+          <input type="color" id="colorCodeInput" value="#ff0000" />
+        </label>
+      </div>
     </div>
 
     <script src="../shared/options.js"></script>
     <script src="../shared/utils.js"></script>
     <script src="../shared/actions.js"></script>
+    <script src="../shared/theme.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

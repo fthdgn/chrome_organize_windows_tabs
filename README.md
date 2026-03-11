@@ -16,6 +16,8 @@ This extension adds these actions:
 
 Default extension icon action is "Merge windows and sort tabs". This can be changed from options page. You can select "do nothing" option to disable default action.
 
+The icon color can be customized from the options page (default, dark, light, or a custom color).
+
 By default the extension ignores pinned tabs, popup and app windows for merge and sort actions. These can be changed from options page.
 
 This extension does not cause tab groups to be ungrouped.

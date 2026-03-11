@@ -1,4 +1,4 @@
-importScripts("../shared/options.js", "../shared/utils.js", "../shared/actions.js")
+importScripts("../shared/options.js", "../shared/utils.js", "../shared/actions.js", "../shared/theme.js")
 
 chrome.contextMenus.onClicked.addListener(async (event) => {
   await actions.run(/** @type {Action} */ (String(event.menuItemId)))
@@ -14,6 +14,23 @@ chrome.runtime.onInstalled.addListener(async () => {
   await chrome.action.setPopup({
     popup: opts.showDefaultActionPopup ? "src/popup/popup.html" : "",
   })
+})
+
+chrome.storage.onChanged.addListener(async (changes, areaName) => {
+  if (areaName === "sync" && changes.colorCode !== undefined) {
+    const colorCode = /** @type {string} */ (changes.colorCode.newValue)
+    if (colorCode) {
+      await theme.updateIcon(colorCode)
+    } else {
+      await theme.resetIcon()
+    }
+  }
+})
+
+void options.get().then(async (opts) => {
+  if (opts.colorCode) {
+    await theme.updateIcon(opts.colorCode)
+  }
 })
 
 void chrome.contextMenus.removeAll().then(() => {

@@ -60,3 +60,41 @@ h1 {
 .option-row select:focus {
   border-color: var(--color-accent);
 }
+
+#iconThemeSelector {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-sm) 0 var(--space-xs);
+  justify-content: center;
+}
+
+#iconThemeSelector label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  padding: var(--space-sm);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-lg);
+}
+
+#iconThemeSelector label:has(input:checked) {
+  border-color: var(--color-accent);
+  background: var(--color-bg-hover);
+}
+
+#iconThemeSelector input[type="radio"] {
+  display: none;
+}
+
+#colorCodeInput {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}

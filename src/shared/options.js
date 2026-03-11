@@ -5,6 +5,7 @@
  * @property {boolean} ignorePopupWindows
  * @property {boolean} ignoreAppWindows
  * @property {boolean} showDefaultActionPopup
+ * @property {string} colorCode
  */
 
 /**
@@ -17,6 +18,7 @@ async function getOptions() {
     ignorePopupWindows: true,
     ignoreAppWindows: true,
     showDefaultActionPopup: true,
+    colorCode: "",
   })
 }
 

@@ -4,18 +4,20 @@
   },
   "action": {
     "default_icon": {
-      "128": "icons/128.png",
+      "16": "icons/16.png",
+      "32": "icons/32.png",
       "48": "icons/48.png",
-      "16": "icons/16.png"
+      "128": "icons/128.png"
     },
     "default_title": "__MSG_extension_name__"
   },
   "default_locale": "en",
   "description": "__MSG_extension_description__",
   "icons": {
-    "128": "icons/128.png",
+    "16": "icons/16.png",
+    "32": "icons/32.png",
     "48": "icons/48.png",
-    "16": "icons/16.png"
+    "128": "icons/128.png"
   },
   "manifest_version": 3,
   "name": "__MSG_extension_name__",

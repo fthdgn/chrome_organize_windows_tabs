@@ -61,5 +61,20 @@
   },
   "options_default_action": {
     "message": "Default action for extension icon:"
+  },
+  "options_icon_theme": {
+    "message": "Icon color:"
+  },
+  "options_icon_default": {
+    "message": "Default"
+  },
+  "options_icon_dark": {
+    "message": "Dark"
+  },
+  "options_icon_light": {
+    "message": "Light"
+  },
+  "options_icon_custom": {
+    "message": "Custom"
   }
 }
