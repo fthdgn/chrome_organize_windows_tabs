@@ -7,6 +7,7 @@ const Action = {
   CLOSE_TABS_FROM_THIS_DOMAIN: "close_tabs_from_this_domain",
   MOVE_TABS_FROM_THIS_DOMAIN: "move_tabs_from_this_domain",
   GROUP_TABS_FROM_THIS_DOMAIN: "group_tabs_from_this_domain",
+  CLOSE_DUPLICATE_TABS: "close_duplicate_tabs",
 }
 
 /**
@@ -36,6 +37,8 @@ async function run(action) {
     await moveTabsFromCurrentDomainAction()
   } else if (action === Action.GROUP_TABS_FROM_THIS_DOMAIN) {
     await groupTabsFromCurrentDomainAction()
+  } else if (action === Action.CLOSE_DUPLICATE_TABS) {
+    await closeDuplicateTabsAction()
   }
 }
 
@@ -109,6 +112,28 @@ async function groupTabsFromCurrentDomainAction() {
   } else {
     const groupId = await chrome.tabs.group({ tabIds: tabIds })
     await chrome.tabGroups.update(groupId, { title: url.host })
+  }
+}
+
+async function closeDuplicateTabsAction() {
+  const opts = await options.get()
+  const tabs = await chrome.tabs.query({
+    pinned: opts.ignorePinnedTabs ? false : undefined,
+  })
+  /** @type {Set<string>} */
+  const seen = new Set()
+  /** @type {number[]} */
+  const duplicates = []
+  for (const tab of tabs) {
+    if (tab.id === undefined || !tab.url) continue
+    if (seen.has(tab.url)) {
+      duplicates.push(tab.id)
+    } else {
+      seen.add(tab.url)
+    }
+  }
+  if (duplicates.length > 0) {
+    await chrome.tabs.remove(duplicates)
   }
 }
 
