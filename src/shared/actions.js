@@ -242,9 +242,22 @@ async function sortTabs() {
   }
 }
 
+/**
+ * @param {string[]} savedOrder
+ * @returns {string[]}
+ */
+function getOrderedActions(savedOrder) {
+  const all = Object.values(Action).filter((a) => a !== Action.DO_NOTHING)
+  if (savedOrder.length === 0) return all
+  const set = new Set(all)
+  const ordered = savedOrder.filter((a) => set.delete(a))
+  return ordered.concat(Array.from(set))
+}
+
 // eslint-disable-next-line no-unused-vars
 const actions = {
   Action,
   getTitle,
+  getOrderedActions,
   run,
 }

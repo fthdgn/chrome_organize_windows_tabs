@@ -45,20 +45,14 @@ h1 {
   flex: 1;
 }
 
-.option-row select {
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--font-size-md);
-  border: var(--border-width) solid var(--color-border-input);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  outline: none;
-  transition: border-color 0.15s;
+.section-divider {
+  border-top: var(--border-width) solid var(--color-bg-hover);
+  margin: var(--space-md) 0;
 }
 
-.option-row select:focus {
-  border-color: var(--color-accent);
+.action-order-hint {
+  margin-left: auto;
+  color: var(--color-muted);
 }
 
 #iconThemeSelector {
@@ -86,6 +80,82 @@ h1 {
 
 #iconThemeSelector input[type="radio"] {
   display: none;
+}
+
+#actionOrderList {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-xs) 0 0;
+}
+
+#actionOrderList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  cursor: grab;
+  border-radius: var(--radius-sm);
+  border: var(--border-width) solid transparent;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+#actionOrderList li:hover {
+  background: var(--color-bg-hover);
+}
+
+#actionOrderList li.dragging {
+  opacity: 0.4;
+}
+
+#actionOrderList li.drop-before {
+  border-top-color: var(--color-accent);
+}
+
+#actionOrderList li.drop-after {
+  border-bottom-color: var(--color-accent);
+}
+
+#actionOrderList .star-icon {
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: var(--font-size-xl);
+  line-height: 1;
+  color: var(--color-muted);
+  opacity: 0.4;
+  transition: opacity 0.15s;
+}
+
+#actionOrderList .star-icon:hover {
+  opacity: 0.8;
+}
+
+#actionOrderList .star-icon.active {
+  color: var(--color-accent);
+  opacity: 1;
+}
+
+#actionOrderList .drag-handle {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  user-select: none;
+}
+
+#actionOrderList li.no-drag {
+  cursor: default;
+}
+
+#actionOrderList .divider {
+  border-top: var(--border-width) dashed var(--color-accent);
+  margin: var(--space-xs) 0;
+  padding: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-align: center;
+  cursor: default;
+  pointer-events: none;
 }
 
 #colorCodeInput {

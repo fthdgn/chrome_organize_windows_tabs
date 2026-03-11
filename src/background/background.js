@@ -17,13 +17,17 @@ chrome.runtime.onInstalled.addListener(async () => {
 })
 
 chrome.storage.onChanged.addListener(async (changes, areaName) => {
-  if (areaName === "sync" && changes.colorCode !== undefined) {
+  if (areaName !== "sync") return
+  if (changes.colorCode !== undefined) {
     const colorCode = /** @type {string} */ (changes.colorCode.newValue)
     if (colorCode) {
       await theme.updateIcon(colorCode)
     } else {
       await theme.resetIcon()
     }
+  }
+  if (changes.actionOrder !== undefined) {
+    await createContextMenus()
   }
 })
 
@@ -33,15 +37,35 @@ void options.get().then(async (opts) => {
   }
 })
 
-void chrome.contextMenus.removeAll().then(() => {
-  for (const action of Object.values(actions.Action)) {
-    if (action === actions.Action.DO_NOTHING) {
-      continue
-    }
+async function createContextMenus() {
+  await chrome.contextMenus.removeAll()
+  const opts = await options.get()
+  const items = actions.getOrderedActions(opts.actionOrder)
+  const limit = chrome.contextMenus.ACTION_MENU_TOP_LEVEL_LIMIT
+  const useParent = items.length > limit
+  const topCount = useParent ? limit - 1 : items.length
+  for (let i = 0; i < topCount; i++) {
     chrome.contextMenus.create({
-      title: actions.getTitle(action),
-      id: action,
+      title: actions.getTitle(/** @type {Action} */ (items[i])),
+      id: items[i],
       contexts: ["action"],
     })
   }
-})
+  if (useParent) {
+    chrome.contextMenus.create({
+      title: chrome.i18n.getMessage("options_action_order_top_level"),
+      id: "parent",
+      contexts: ["action"],
+    })
+    for (let i = topCount; i < items.length; i++) {
+      chrome.contextMenus.create({
+        title: actions.getTitle(/** @type {Action} */ (items[i])),
+        id: items[i],
+        parentId: "parent",
+        contexts: ["action"],
+      })
+    }
+  }
+}
+
+void createContextMenus()

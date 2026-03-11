@@ -32,10 +32,6 @@
       </div>
 
       <div class="option-row">
-        <span data-i18n="options_default_action"></span>
-        <select id="defaultActionInput"></select>
-      </div>
-      <div class="option-row">
         <span data-i18n="options_icon_theme"></span>
       </div>
       <div id="iconThemeSelector">
@@ -61,6 +57,14 @@
           <input type="color" id="colorCodeInput" value="#ff0000" />
         </label>
       </div>
+
+      <div class="section-divider"></div>
+
+      <div class="option-row">
+        <span data-i18n="options_action_order"></span>
+        <span class="action-order-hint" data-i18n="options_action_order_default"></span>
+      </div>
+      <ul id="actionOrderList"></ul>
     </div>
 
     <script src="../shared/options.js"></script>

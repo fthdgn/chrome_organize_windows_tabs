@@ -65,8 +65,14 @@
   "options_show_popup": {
     "message": "Show default action popup"
   },
-  "options_default_action": {
-    "message": "Default action for extension icon:"
+  "options_action_order": {
+    "message": "Actions:"
+  },
+  "options_action_order_default": {
+    "message": "Default"
+  },
+  "options_action_order_top_level": {
+    "message": "Other actions"
   },
   "options_icon_theme": {
     "message": "Icon color:"
