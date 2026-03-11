@@ -29,17 +29,20 @@
   "popup_title": {
     "message": "Default Action Warning"
   },
-  "popup_message": {
-    "message": "This will run the default action, which will"
+  "popup_default_action_label": {
+    "message": "Default action:"
   },
   "popup_options_hint": {
     "message": "You can change default action on the options page."
   },
-  "popup_ok": {
-    "message": "OK"
+  "popup_run": {
+    "message": "Run"
+  },
+  "popup_cancel": {
+    "message": "Cancel"
   },
   "popup_dont_ask_again": {
-    "message": "Don't ask again."
+    "message": "Run automatically next time"
   },
   "options_title": {
     "message": "Organize Windows and Tabs Options"

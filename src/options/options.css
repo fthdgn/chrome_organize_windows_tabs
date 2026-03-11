@@ -1,0 +1,62 @@
+body {
+  font-size: var(--font-size-lg);
+  line-height: var(--leading-relaxed);
+  background: var(--color-bg-page);
+  padding: var(--space-3xl);
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2xl);
+  text-align: center;
+}
+
+.card {
+  background: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) 0;
+}
+
+.option-row + .option-row {
+  border-top: var(--border-width) solid var(--color-bg-hover);
+}
+
+.option-row input[type="checkbox"] {
+  width: var(--space-xl);
+  height: var(--space-xl);
+  accent-color: var(--color-accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.option-row label {
+  cursor: pointer;
+  flex: 1;
+}
+
+.option-row select {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-md);
+  border: var(--border-width) solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.option-row select:focus {
+  border-color: var(--color-accent);
+}

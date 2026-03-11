@@ -3,19 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <title data-i18n="popup_title"></title>
+    <link rel="stylesheet" href="../shared/shared.css" />
     <link rel="stylesheet" href="popup.css" />
   </head>
 
-  <body style="width: 250px">
-    <div>
-      <span data-i18n="popup_message"></span>
-      <span id="defaultActionSpan"></span>.
-      <br />
-      <span data-i18n="popup_options_hint"></span>
+  <body>
+    <div class="message">
+      <span data-i18n="popup_default_action_label"></span>
+      <strong id="defaultActionSpan"></strong>
+      <div class="hint"><a id="optionsLink" data-i18n="popup_options_hint"></a></div>
     </div>
 
-    <button id="okButton" data-i18n="popup_ok"></button>
-    <p><input type="checkbox" id="dontAskAgainInput" /><span data-i18n="popup_dont_ask_again"></span></p>
+    <label class="checkbox-row">
+      <input type="checkbox" id="dontAskAgainInput" />
+      <span data-i18n="popup_dont_ask_again"></span>
+    </label>
+
+    <div class="button-row">
+      <button id="cancelButton" class="secondary" data-i18n="popup_cancel"></button>
+      <button id="okButton" data-i18n="popup_run"></button>
+    </div>
 
     <script src="../shared/options.js"></script>
     <script src="../shared/utils.js"></script>

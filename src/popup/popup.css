@@ -1,6 +1,88 @@
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: rgb(32, 33, 36);
-    color: rgb(232, 234, 237);
-  }
+body {
+  width: var(--popup-width);
+  font-size: var(--font-size-md);
+  line-height: var(--leading-normal);
+  padding: var(--space-xl);
+  background: var(--color-bg);
+}
+
+.message {
+  margin-bottom: var(--space-lg);
+}
+
+#defaultActionSpan {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-semibold);
+}
+
+.hint {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.hint a {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.hint a:hover {
+  color: var(--color-accent);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: var(--space-lg);
+  height: var(--space-lg);
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.button-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+button {
+  flex: 1;
+  padding: var(--space-sm) var(--space-xl);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+button:hover {
+  background: var(--color-accent-hover);
+}
+
+button:active {
+  background: var(--color-accent-active);
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--color-muted);
+  border: var(--border-width) solid var(--color-border-input);
+}
+
+button.secondary:hover {
+  background: var(--color-bg-hover);
+}
+
+button.secondary:active {
+  background: var(--color-bg-active);
 }
