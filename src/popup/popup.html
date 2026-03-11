@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title data-i18n="popup_title"></title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+
+  <body style="width: 250px">
+    <div>
+      <span data-i18n="popup_message"></span>
+      <span id="defaultActionSpan"></span>.
+      <br />
+      <span data-i18n="popup_options_hint"></span>
+    </div>
+
+    <button id="okButton" data-i18n="popup_ok"></button>
+    <p><input type="checkbox" id="dontAskAgainInput" /><span data-i18n="popup_dont_ask_again"></span></p>
+
+    <script src="../shared/options.js"></script>
+    <script src="../shared/utils.js"></script>
+    <script src="../shared/actions.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

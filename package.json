@@ -1,0 +1,38 @@
+{
+  "name": "organize_windows_tabs",
+  "version": "1.5.0",
+  "description": "Chrome extension to organize windows and tabs",
+  "main": "src/background/background.js",
+  "scripts": {
+    "start": "node scripts/start.mjs",
+    "format": "prettier -w .",
+    "check:lint": "eslint src",
+    "check:lint:scripts": "eslint -c scripts/eslint.config.mjs scripts",
+    "check:type": "tsc --noEmit",
+    "check:type:scripts": "tsc --noEmit -p scripts",
+    "check:format": "prettier -c .",
+    "check": "run-p check:*",
+    "prepackage": "npm run check",
+    "package": "bestzip organize_windows_tabs.zip manifest.json icons/ src/ _locales/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@puppeteer/browsers": "^2.13.0",
+    "@types/chrome": "^0.1.37",
+    "@types/node": "^25.4.0",
+    "bestzip": "^2.2.1",
+    "eslint": "^9.39.4",
+    "globals": "^17.4.0",
+    "npm-run-all2": "^8.0.4",
+    "prettier": "3.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0"
+  },
+  "volta": {
+    "node": "24.14.0",
+    "npm": "11.9.0"
+  }
+}

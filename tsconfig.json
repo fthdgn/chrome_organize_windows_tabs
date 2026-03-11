@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": ["chrome"],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.js"]
+}

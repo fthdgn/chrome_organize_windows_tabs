@@ -1,31 +1,26 @@
 {
-   "background": {
-      "service_worker": "background.js"
-   },
-   "action": {
-      "default_icon": {
-         "128": "icons/128.png",
-         "48": "icons/48.png",
-         "16": "icons/16.png"
-      },
-      "default_title": "Organize Windows and Tabs"
-   },
-   "homepage_url": "https://github.com/fthdgn/chrome_organize_windows_tabs/",
-   "description": "Organize Windows and Tabs",
-   "icons": {
+  "background": {
+    "service_worker": "src/background/background.js"
+  },
+  "action": {
+    "default_icon": {
       "128": "icons/128.png",
       "48": "icons/48.png",
       "16": "icons/16.png"
-   },
-   "manifest_version": 3,
-   "name": "Organize Windows and Tabs",
-   "offline_enabled": true,
-   "options_page": "options.html",
-   "permissions": [
-      "tabs",
-      "contextMenus",
-      "storage",
-      "tabGroups"
-   ],
-   "version": "1.4.1"
+    },
+    "default_title": "__MSG_extension_name__"
+  },
+  "default_locale": "en",
+  "description": "__MSG_extension_description__",
+  "icons": {
+    "128": "icons/128.png",
+    "48": "icons/48.png",
+    "16": "icons/16.png"
+  },
+  "manifest_version": 3,
+  "name": "__MSG_extension_name__",
+  "offline_enabled": true,
+  "options_page": "src/options/options.html",
+  "permissions": ["tabs", "contextMenus", "storage", "tabGroups"],
+  "version": "1.5.0"
 }

@@ -1,0 +1,62 @@
+{
+  "extension_name": {
+    "message": "Organize Windows and Tabs"
+  },
+  "extension_description": {
+    "message": "Organize Windows and Tabs"
+  },
+  "action_do_nothing": {
+    "message": "Do nothing"
+  },
+  "action_merge_and_sort": {
+    "message": "Merge windows and sort tabs"
+  },
+  "action_merge": {
+    "message": "Merge windows"
+  },
+  "action_sort": {
+    "message": "Sort tabs"
+  },
+  "action_close_tabs_from_this_domain": {
+    "message": "Close tabs from this domain"
+  },
+  "action_move_tabs_from_this_domain": {
+    "message": "Move tabs from this domain to this window"
+  },
+  "action_group_tabs_from_this_domain": {
+    "message": "Group tabs from this domain"
+  },
+  "popup_title": {
+    "message": "Default Action Warning"
+  },
+  "popup_message": {
+    "message": "This will run the default action, which will"
+  },
+  "popup_options_hint": {
+    "message": "You can change default action on the options page."
+  },
+  "popup_ok": {
+    "message": "OK"
+  },
+  "popup_dont_ask_again": {
+    "message": "Don't ask again."
+  },
+  "options_title": {
+    "message": "Organize Windows and Tabs Options"
+  },
+  "options_ignore_pinned_tabs": {
+    "message": "Ignore pinned tabs for merge and sort actions"
+  },
+  "options_ignore_popup_windows": {
+    "message": "Ignore popup windows for merge and sort actions"
+  },
+  "options_ignore_app_windows": {
+    "message": "Ignore app windows for merge and sort actions"
+  },
+  "options_show_popup": {
+    "message": "Show default action popup"
+  },
+  "options_default_action": {
+    "message": "Default action for extension icon:"
+  }
+}
