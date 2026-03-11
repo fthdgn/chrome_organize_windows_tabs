@@ -8,6 +8,7 @@ const Action = {
   MOVE_TABS_FROM_THIS_DOMAIN: "move_tabs_from_this_domain",
   GROUP_TABS_FROM_THIS_DOMAIN: "group_tabs_from_this_domain",
   CLOSE_DUPLICATE_TABS: "close_duplicate_tabs",
+  MOVE_TABS_FROM_THIS_DOMAIN_TO_NEW_WINDOW: "move_tabs_from_this_domain_to_new_window",
 }
 
 /**
@@ -39,6 +40,8 @@ async function run(action) {
     await groupTabsFromCurrentDomainAction()
   } else if (action === Action.CLOSE_DUPLICATE_TABS) {
     await closeDuplicateTabsAction()
+  } else if (action === Action.MOVE_TABS_FROM_THIS_DOMAIN_TO_NEW_WINDOW) {
+    await moveTabsFromCurrentDomainToNewWindowAction()
   }
 }
 
@@ -112,6 +115,20 @@ async function groupTabsFromCurrentDomainAction() {
   } else {
     const groupId = await chrome.tabs.group({ tabIds: tabIds })
     await chrome.tabGroups.update(groupId, { title: url.host })
+  }
+}
+
+async function moveTabsFromCurrentDomainToNewWindowAction() {
+  const selectedTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
+  if (!selectedTab?.url) return
+  const url = new URL(selectedTab.url)
+  const tabs = await getTabsFromDomain(url)
+  const tabIds = tabs.map((tab) => tab.id).filter((id) => id !== undefined)
+  if (!utils.isNonEmptyArray(tabIds)) return
+  const newWindow = await chrome.windows.create({ tabId: tabIds[0] })
+  if (!newWindow?.id) return
+  for (const tabId of tabIds.slice(1)) {
+    await chrome.tabs.move(tabId, { windowId: newWindow.id, index: -1 })
   }
 }
 

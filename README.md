@@ -15,6 +15,8 @@ This extension adds these actions:
   Groups tabs from same domain with the selected tab's domain.
 * Close duplicate tabs    
   Closes tabs with duplicate URLs, keeping the first occurrence.
+* Move tabs from this domain to a new window    
+  Moves tabs from same domain with the selected tab's domain to a new window.
 
 Default extension icon action is "Merge windows and sort tabs". This can be changed from options page. You can select "do nothing" option to disable default action.
 

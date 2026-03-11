@@ -29,6 +29,9 @@
   "action_close_duplicate_tabs": {
     "message": "Close duplicate tabs"
   },
+  "action_move_tabs_from_this_domain_to_new_window": {
+    "message": "Move tabs from this domain to a new window"
+  },
   "popup_title": {
     "message": "Default Action Warning"
   },
