@@ -19,6 +19,32 @@
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
+  "commands": {
+    "merge_and_sort": {
+      "description": "__MSG_action_merge_and_sort__"
+    },
+    "merge": {
+      "description": "__MSG_action_merge__"
+    },
+    "sort": {
+      "description": "__MSG_action_sort__"
+    },
+    "close_tabs_from_this_domain": {
+      "description": "__MSG_action_close_tabs_from_this_domain__"
+    },
+    "move_tabs_from_this_domain": {
+      "description": "__MSG_action_move_tabs_from_this_domain__"
+    },
+    "group_tabs_from_this_domain": {
+      "description": "__MSG_action_group_tabs_from_this_domain__"
+    },
+    "close_duplicate_tabs": {
+      "description": "__MSG_action_close_duplicate_tabs__"
+    },
+    "move_tabs_from_this_domain_to_new_window": {
+      "description": "__MSG_action_move_tabs_from_this_domain_to_new_window__"
+    }
+  },
   "manifest_version": 3,
   "name": "__MSG_extension_name__",
   "offline_enabled": true,

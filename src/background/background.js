@@ -1,7 +1,11 @@
 importScripts("../shared/options.js", "../shared/utils.js", "../shared/actions.js", "../shared/theme.js")
 
+chrome.commands.onCommand.addListener(async (command) => {
+  await actions.run(command)
+})
+
 chrome.contextMenus.onClicked.addListener(async (event) => {
-  await actions.run(/** @type {Action} */ (String(event.menuItemId)))
+  await actions.run(String(event.menuItemId))
 })
 
 chrome.action.onClicked.addListener(async () => {
@@ -46,7 +50,7 @@ async function createContextMenus() {
   const topCount = useParent ? limit - 1 : items.length
   for (let i = 0; i < topCount; i++) {
     chrome.contextMenus.create({
-      title: actions.getTitle(/** @type {Action} */ (items[i])),
+      title: actions.getTitle(items[i]),
       id: items[i],
       contexts: ["action"],
     })
@@ -59,7 +63,7 @@ async function createContextMenus() {
     })
     for (let i = topCount; i < items.length; i++) {
       chrome.contextMenus.create({
-        title: actions.getTitle(/** @type {Action} */ (items[i])),
+        title: actions.getTitle(items[i]),
         id: items[i],
         parentId: "parent",
         contexts: ["action"],

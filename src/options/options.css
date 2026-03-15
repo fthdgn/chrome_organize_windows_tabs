@@ -158,6 +158,16 @@ h1 {
   pointer-events: none;
 }
 
+#shortcutsLink {
+  margin-left: auto;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+#shortcutsLink:hover {
+  text-decoration: underline;
+}
+
 #colorCodeInput {
   position: absolute;
   width: 0;

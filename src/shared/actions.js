@@ -1,18 +1,10 @@
-/** @enum {string} */
-const Action = {
-  DO_NOTHING: "do_nothing",
-  MERGE_AND_SORT: "merge_and_sort",
-  MERGE: "merge",
-  SORT: "sort",
-  CLOSE_TABS_FROM_THIS_DOMAIN: "close_tabs_from_this_domain",
-  MOVE_TABS_FROM_THIS_DOMAIN: "move_tabs_from_this_domain",
-  GROUP_TABS_FROM_THIS_DOMAIN: "group_tabs_from_this_domain",
-  CLOSE_DUPLICATE_TABS: "close_duplicate_tabs",
-  MOVE_TABS_FROM_THIS_DOMAIN_TO_NEW_WINDOW: "move_tabs_from_this_domain_to_new_window",
-}
+const DO_NOTHING = "do_nothing"
+
+/** @type {string[]} */
+const allActions = Object.keys(chrome.runtime.getManifest().commands ?? {})
 
 /**
- * @param {Action} action
+ * @param {string} action
  * @returns {string}
  */
 function getTitle(action) {
@@ -20,27 +12,25 @@ function getTitle(action) {
 }
 
 /**
- * @param {Action} action
+ * @param {string} action
  * @returns {Promise<void>}
  */
 async function run(action) {
-  if (action === Action.DO_NOTHING) {
-    //DO NOTHING
-  } else if (action === Action.MERGE_AND_SORT) {
+  if (action === "merge_and_sort") {
     await mergeWindowsAndSortTabsAction()
-  } else if (action === Action.MERGE) {
+  } else if (action === "merge") {
     await mergeWindowsAction()
-  } else if (action === Action.SORT) {
+  } else if (action === "sort") {
     await sortTabsAction()
-  } else if (action === Action.CLOSE_TABS_FROM_THIS_DOMAIN) {
+  } else if (action === "close_tabs_from_this_domain") {
     await closeTabsFromCurrentDomainAction()
-  } else if (action === Action.MOVE_TABS_FROM_THIS_DOMAIN) {
+  } else if (action === "move_tabs_from_this_domain") {
     await moveTabsFromCurrentDomainAction()
-  } else if (action === Action.GROUP_TABS_FROM_THIS_DOMAIN) {
+  } else if (action === "group_tabs_from_this_domain") {
     await groupTabsFromCurrentDomainAction()
-  } else if (action === Action.CLOSE_DUPLICATE_TABS) {
+  } else if (action === "close_duplicate_tabs") {
     await closeDuplicateTabsAction()
-  } else if (action === Action.MOVE_TABS_FROM_THIS_DOMAIN_TO_NEW_WINDOW) {
+  } else if (action === "move_tabs_from_this_domain_to_new_window") {
     await moveTabsFromCurrentDomainToNewWindowAction()
   }
 }
@@ -247,7 +237,7 @@ async function sortTabs() {
  * @returns {string[]}
  */
 function getOrderedActions(savedOrder) {
-  const all = Object.values(Action).filter((a) => a !== Action.DO_NOTHING)
+  const all = allActions.slice()
   if (savedOrder.length === 0) return all
   const set = new Set(all)
   const ordered = savedOrder.filter((a) => set.delete(a))
@@ -256,7 +246,8 @@ function getOrderedActions(savedOrder) {
 
 // eslint-disable-next-line no-unused-vars
 const actions = {
-  Action,
+  DO_NOTHING,
+  allActions,
   getTitle,
   getOrderedActions,
   run,

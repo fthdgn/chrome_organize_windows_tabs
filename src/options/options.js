@@ -19,6 +19,8 @@ const colorCodeRadios = /** @type {NodeListOf<HTMLInputElement>} */ (
 
 const colorCodeInput = /** @type {HTMLInputElement} */ (document.getElementById("colorCodeInput"))
 
+const shortcutsLink = /** @type {HTMLAnchorElement} */ (document.getElementById("shortcutsLink"))
+
 /** @type {Awaited<ReturnType<typeof theme.loadIcon>>} */
 let iconData
 
@@ -48,7 +50,7 @@ void theme.loadIcon().then((data) => {
  * @param {string} actionValue
  */
 async function setDefaultAction(actionValue) {
-  await options.set({ defaultAction: /** @type {Action} */ (actionValue) })
+  await options.set({ defaultAction: actionValue })
   for (const li of actionOrderList.querySelectorAll("li")) {
     const star = li.querySelector(".star-icon")
     if (!star) continue
@@ -67,14 +69,14 @@ function renderActionOrder(order, defaultAction) {
 
   const doNothingLi = document.createElement("li")
   doNothingLi.className = "no-drag"
-  doNothingLi.dataset.action = actions.Action.DO_NOTHING
+  doNothingLi.dataset.action = actions.DO_NOTHING
   const doNothingLabel = document.createElement("span")
-  doNothingLabel.textContent = actions.getTitle(actions.Action.DO_NOTHING)
+  doNothingLabel.textContent = actions.getTitle(actions.DO_NOTHING)
   doNothingLi.appendChild(doNothingLabel)
   const doNothingStar = document.createElement("span")
-  doNothingStar.className = "star-icon" + (defaultAction === actions.Action.DO_NOTHING ? " active" : "")
-  doNothingStar.textContent = defaultAction === actions.Action.DO_NOTHING ? "★" : "☆"
-  doNothingStar.addEventListener("click", () => setDefaultAction(actions.Action.DO_NOTHING))
+  doNothingStar.className = "star-icon" + (defaultAction === actions.DO_NOTHING ? " active" : "")
+  doNothingStar.textContent = defaultAction === actions.DO_NOTHING ? "★" : "☆"
+  doNothingStar.addEventListener("click", () => setDefaultAction(actions.DO_NOTHING))
   doNothingLi.appendChild(doNothingStar)
   actionOrderList.appendChild(doNothingLi)
 
@@ -93,7 +95,7 @@ function renderActionOrder(order, defaultAction) {
     handle.textContent = "☰"
     li.appendChild(handle)
     const label = document.createElement("span")
-    label.textContent = actions.getTitle(/** @type {Action} */ (order[i]))
+    label.textContent = actions.getTitle(order[i])
     li.appendChild(label)
     const star = document.createElement("span")
     star.className = "star-icon" + (order[i] === defaultAction ? " active" : "")
@@ -167,6 +169,11 @@ actionOrderList.addEventListener("dragend", () => {
   if (dragItem) dragItem.classList.remove("dragging")
   dragItem = null
   clearDropIndicators()
+})
+
+shortcutsLink.addEventListener("click", (e) => {
+  e.preventDefault()
+  void chrome.tabs.create({ url: "chrome://extensions/shortcuts" })
 })
 
 utils.localizeHtml()

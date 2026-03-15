@@ -1,6 +1,6 @@
 /**
  * @typedef {Object} Options
- * @property {Action} defaultAction
+ * @property {string} defaultAction
  * @property {boolean} ignorePinnedTabs
  * @property {boolean} ignorePopupWindows
  * @property {boolean} ignoreAppWindows
@@ -14,7 +14,7 @@
  */
 async function getOptions() {
   return await chrome.storage.sync.get({
-    defaultAction: actions.Action.MERGE_AND_SORT,
+    defaultAction: actions.allActions[0],
     ignorePinnedTabs: true,
     ignorePopupWindows: true,
     ignoreAppWindows: true,

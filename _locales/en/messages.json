@@ -88,5 +88,11 @@
   },
   "options_icon_custom": {
     "message": "Custom"
+  },
+  "options_shortcuts": {
+    "message": "Keyboard shortcuts:"
+  },
+  "options_shortcuts_link": {
+    "message": "Configure shortcuts"
   }
 }
