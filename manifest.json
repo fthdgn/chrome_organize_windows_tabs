@@ -43,6 +43,9 @@
     },
     "move_tabs_from_this_domain_to_new_window": {
       "description": "__MSG_action_move_tabs_from_this_domain_to_new_window__"
+    },
+    "separate_windows_by_domain": {
+      "description": "__MSG_action_separate_windows_by_domain__"
     }
   },
   "manifest_version": 3,

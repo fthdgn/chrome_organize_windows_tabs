@@ -32,6 +32,8 @@ async function run(action) {
     await closeDuplicateTabsAction()
   } else if (action === "move_tabs_from_this_domain_to_new_window") {
     await moveTabsFromCurrentDomainToNewWindowAction()
+  } else if (action === "separate_windows_by_domain") {
+    await separateWindowsByDomainAction()
   }
 }
 
@@ -119,6 +121,43 @@ async function moveTabsFromCurrentDomainToNewWindowAction() {
   if (!newWindow?.id) return
   for (const tabId of tabIds.slice(1)) {
     await chrome.tabs.move(tabId, { windowId: newWindow.id, index: -1 })
+  }
+}
+
+async function separateWindowsByDomainAction() {
+  const opts = await options.get()
+  const currentWindow = await chrome.windows.getCurrent()
+  const windows = await chrome.windows.getAll({ populate: true })
+  const selectedTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]
+  const currentHost = selectedTab?.url ? new URL(selectedTab.url).host : ""
+
+  /** @type {Map<string, number[]>} */
+  const domainTabs = new Map()
+
+  for (const window of windows) {
+    if (opts.ignoreAppWindows && window.type === "app") continue
+    if (opts.ignorePopupWindows && window.type === "popup") continue
+
+    for (const tab of window.tabs || []) {
+      if (opts.ignorePinnedTabs && tab.pinned) continue
+      if (tab.id === undefined || !tab.url) continue
+      const host = new URL(tab.url).host
+      if (!host) continue
+      if (!domainTabs.has(host)) domainTabs.set(host, [])
+      domainTabs.get(host)?.push(tab.id)
+    }
+  }
+
+  for (const [host, tabIds] of domainTabs) {
+    if (host === currentHost) {
+      await chrome.tabs.move(tabIds, { windowId: currentWindow.id, index: -1 })
+    } else {
+      const newWindow = await chrome.windows.create({ tabId: tabIds[0] })
+      if (!newWindow?.id) continue
+      if (tabIds.length > 1) {
+        await chrome.tabs.move(tabIds.slice(1), { windowId: newWindow.id, index: -1 })
+      }
+    }
   }
 }
 
