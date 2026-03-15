@@ -19,7 +19,22 @@ const colorCodeRadios = /** @type {NodeListOf<HTMLInputElement>} */ (
 
 const colorCodeInput = /** @type {HTMLInputElement} */ (document.getElementById("colorCodeInput"))
 
+const sortChips = /** @type {NodeListOf<HTMLButtonElement>} */ (document.querySelectorAll(".chip[data-sort-mode]"))
+
 const shortcutsLink = /** @type {HTMLAnchorElement} */ (document.getElementById("shortcutsLink"))
+
+/**
+ * @param {string} mode
+ * @param {string} dir
+ */
+function updateSortChips(mode, dir) {
+  for (const chip of sortChips) {
+    const isActive = chip.dataset.sortMode === mode
+    chip.classList.toggle("active", isActive)
+    const arrow = chip.querySelector(".chip-arrow")
+    if (arrow) arrow.textContent = dir === "asc" ? "▲" : "▼"
+  }
+}
 
 /** @type {Awaited<ReturnType<typeof theme.loadIcon>>} */
 let iconData
@@ -183,6 +198,7 @@ void options.get().then((opts) => {
   ignorePopupWindowsInput.checked = opts.ignorePopupWindows
   ignoreAppWindowsInput.checked = opts.ignoreAppWindows
   showDefaultActionPopupInput.checked = opts.showDefaultActionPopup
+  updateSortChips(opts.sortMode, opts.sortDirection)
 
   renderActionOrder(actions.getOrderedActions(opts.actionOrder), opts.defaultAction)
 
@@ -227,6 +243,23 @@ showDefaultActionPopupInput.addEventListener("change", async () => {
     popup: showDefaultActionPopupInput.checked ? "src/popup/popup.html" : "",
   })
 })
+
+for (const chip of sortChips) {
+  chip.addEventListener("click", async () => {
+    const mode = /** @type {string} */ (chip.dataset.sortMode)
+    if (chip.classList.contains("active")) {
+      const arrow = chip.querySelector(".chip-arrow")
+      const dir = arrow?.textContent === "▲" ? "desc" : "asc"
+      updateSortChips(mode, dir)
+      await options.set({ sortDirection: dir })
+    } else {
+      const activeArrow = document.querySelector(".chip.active .chip-arrow")
+      const dir = activeArrow?.textContent === "▲" ? "asc" : "desc"
+      updateSortChips(mode, dir)
+      await options.set({ sortMode: mode })
+    }
+  })
+}
 
 for (const radio of colorCodeRadios) {
   radio.addEventListener("change", async () => {

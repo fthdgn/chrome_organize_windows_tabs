@@ -45,6 +45,47 @@ h1 {
   flex: 1;
 }
 
+.chip-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 0 0 var(--space-md);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-md);
+  border: var(--border-width) solid var(--color-border-input);
+  border-radius: 9999px;
+  background: var(--color-bg);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
+}
+
+.chip:hover {
+  background: var(--color-bg-hover);
+}
+
+.chip.active {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.chip .chip-arrow {
+  display: none;
+}
+
+.chip.active .chip-arrow {
+  display: inline;
+}
+
 .section-divider {
   border-top: var(--border-width) solid var(--color-bg-hover);
   margin: var(--space-md) 0;

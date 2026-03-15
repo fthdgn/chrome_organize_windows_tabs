@@ -92,6 +92,21 @@
   "options_icon_custom": {
     "message": "Custom"
   },
+  "options_sort": {
+    "message": "Tab sorting:"
+  },
+  "options_sort_direction_asc": {
+    "message": "Ascending"
+  },
+  "options_sort_direction_desc": {
+    "message": "Descending"
+  },
+  "options_sort_mode_url": {
+    "message": "URL"
+  },
+  "options_sort_mode_domain": {
+    "message": "Domain"
+  },
   "options_shortcuts": {
     "message": "Keyboard shortcuts:"
   },

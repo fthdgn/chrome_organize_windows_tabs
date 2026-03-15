@@ -6,6 +6,8 @@
  * @property {boolean} ignoreAppWindows
  * @property {boolean} showDefaultActionPopup
  * @property {string} colorCode
+ * @property {string} sortDirection
+ * @property {string} sortMode
  * @property {string[]} actionOrder
  */
 
@@ -20,6 +22,8 @@ async function getOptions() {
     ignoreAppWindows: true,
     showDefaultActionPopup: true,
     colorCode: "",
+    sortDirection: "desc",
+    sortMode: "url",
     actionOrder: [],
   })
 }

@@ -226,6 +226,27 @@ async function mergeWindows() {
   }
 }
 
+/**
+ * @param {string} host
+ * @returns {string}
+ */
+function reverseDomain(host) {
+  return host.split(".").reverse().join(".")
+}
+
+/**
+ * @param {string} url
+ * @param {string} mode
+ * @returns {string}
+ */
+function sortKey(url, mode) {
+  if (mode === "domain") {
+    const parsed = new URL(url)
+    return reverseDomain(parsed.host) + parsed.pathname + parsed.search
+  }
+  return url
+}
+
 async function sortTabs() {
   const opts = await options.get()
   const currentWindow = await chrome.windows.getCurrent({ populate: true })
@@ -234,18 +255,20 @@ async function sortTabs() {
     tabs = tabs.filter((tab) => !tab.pinned)
   }
 
+  const dir = opts.sortDirection === "asc" ? 1 : -1
+
   tabs.sort(function (a, b) {
     if (a.groupId < b.groupId) {
       return -1
     } else if (a.groupId > b.groupId) {
       return 1
     } else {
-      const aUrl = a.url || ""
-      const bUrl = b.url || ""
-      if (aUrl < bUrl) {
-        return -1
-      } else if (aUrl > bUrl) {
-        return 1
+      const aKey = sortKey(a.url || "", opts.sortMode)
+      const bKey = sortKey(b.url || "", opts.sortMode)
+      if (aKey < bKey) {
+        return -1 * dir
+      } else if (aKey > bKey) {
+        return 1 * dir
       } else {
         return 0
       }
